@@ -573,7 +573,10 @@ async function ping(){
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
 
-    const r = await fetch(`${API_URL}/health`, {
+    const r = await fetch(`${API_URL}/ask`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({query:"ping", mode:"llama"}),
       signal: controller.signal
     });
 
