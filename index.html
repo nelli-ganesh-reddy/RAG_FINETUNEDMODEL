@@ -594,7 +594,7 @@ async function ping(){
 }
 
 document.getElementById('qi').focus();
-txt.textContent = 'checking...';
+document.getElementById('statusTxt').textContent = 'checking...';
 ping();
 setInterval(ping, 5000); // check every 5 seconds
 </script>
