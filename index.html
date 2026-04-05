@@ -566,22 +566,37 @@ function esc(s){
 
 /* ── health check ── */
 async function ping(){
-  const dot=document.getElementById('dot');
-  const txt=document.getElementById('statusTxt');
-  try{
-    const r=await fetch(`${API_URL}/health`,{signal:AbortSignal.timeout(5000)});
-    if(r.ok){
-      dot.className='dot ok'; txt.textContent='connected';
+  const dot = document.getElementById('dot');
+  const txt = document.getElementById('statusTxt');
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+
+    const r = await fetch(`${API_URL}/health`, {
+      signal: controller.signal
+    });
+
+    clearTimeout(timeout);
+
+    if (r.ok) {
+      dot.className = 'dot ok';
+      txt.textContent = 'connected';
     } else {
-      dot.className='dot err'; txt.textContent='api error';
+      dot.className = 'dot err';
+      txt.textContent = 'api error';
     }
-  }catch{
-    dot.className='dot err'; txt.textContent='not connected';
+
+  } catch (e) {
+    dot.className = 'dot err';
+    txt.textContent = 'not connected';
   }
 }
 
 document.getElementById('qi').focus();
+txt.textContent = 'checking...';
 ping();
+setInterval(ping, 5000); // check every 5 seconds
 </script>
 </body>
 </html>
